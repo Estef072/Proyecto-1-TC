@@ -1,7 +1,6 @@
-
 class Graph:
     def __init__(self, alphabet: list, states: int or list, isAFND: bool = False, epsilon: bool = False,
-                 initial_state: str or int = None, final_states:list = [], transition_table:dict = None) -> None:
+                 initial_state: str or int = None, final_states: list = [], transition_table: dict = None) -> None:
         """
         Initiates the graph for the automata.\n
         :param alphabet:
@@ -9,7 +8,7 @@ class Graph:
         :param isAFND:
         :param epsilon:
         :param initial_state:
-        :param final_states: A list or integer of the final states, can be string, int or list.
+        :param final_states: A list with the final states, can be string, int or list.
         :param transition_table: Dictionary containing the transitions of the table: {"state":{"tranition":"end_state",...},...}
         """
 
@@ -32,14 +31,11 @@ class Graph:
 
         self.table = transition_table or {}
         if not self.table:
-            transitions = {letter:"" for letter in alphabet}
+            transitions = {letter: "" for letter in alphabet}
             for state in self.states:
-                self.table.update({state:transitions.copy()})
+                self.table.update({state: transitions.copy()})
 
-
-
-
-    def checkState(self, state:str or int) -> bool:
+    def checkState(self, state: str or int) -> bool:
         """
         Checks if a given state is on the graph.\n
         :param state: {str or int} The given state
@@ -62,7 +58,7 @@ class Graph:
         if self.checkState(state):
             self.initial = state
 
-    def addFinal(self, state:int or str) -> None:
+    def addFinal(self, state: int or str) -> None:
         """
         Adds a new final state for the graph.\n
         :param state: {str or int} The specified state, which ought to be on the list already.
@@ -77,6 +73,10 @@ class Graph:
         self.final = []
 
     def __str__(self) -> str:
+        """
+        Gives the correct format for displaying the graph with a relation table.
+        :return: Formatted string
+        """
 
         string = ""
 
@@ -84,7 +84,7 @@ class Graph:
 
         formato = lambda x: str(x).center(divisor, " ")
 
-        header = "\033[1;4m"+ formato("")
+        header = "\033[1;4m" + formato("")
 
         for x in self.alphabet:
             header += "|" + formato(x)
@@ -94,22 +94,36 @@ class Graph:
 
         for x in self.table:
             line = ""
-            line += (str("*" if x in list(self.final) else ">" if x == self.initial else "") + str(x)).rjust(divisor," ")
+            line += (str("*" if x in list(self.final) else ">" if x == self.initial else "") + str(x)).rjust(divisor,
+                                                                                                             " ")
             for y in self.table[x].values():
                 line += "|" + formato(y)
             string += line + "\n"
 
         return string
 
-    def setTransition(self,initial_state, transition, final_state) -> None:
+    def setTransition(self, initial_state, transition, final_state) -> None:
+        """
+        Sets a especific transition, can overwrite current data.\n
+        :param initial_state: The initial state.
+        :param transition: The name of the transition, it should be part of the alphabet.
+        :param final_state: The destination after the transition.
+        """
+
+        if not {initial_state, *final_state}.issubset(self.states):
+            raise ValueError("The given states cant be outside of the states of the graph.")
+
+        if transition not in self.alphabet:
+            raise ValueError("The transition should be in the alphabet for the graph.")
+
         self.table[initial_state][transition] = final_state
 
-    def export(self,filename="output"):
-        with open(filename.join(("",".gv")), "w") as file:
+    def export(self, filename="output"):
+        with open(filename.join(("", ".gv")), "w") as file:
             file.write("digraph finite_state_machine {\n    rankdir=LR;\n\n\t")
 
             file.write("node [shape = point]; Start;\n\t")
-            file.write("node [shape = doublecircle]; "+str(self.final).replace("[","").replace("]","")+";\n\t")
+            file.write("node [shape = doublecircle]; " + str(self.final).replace("[", "").replace("]", "") + ";\n\t")
             file.write("node [shape = circle];\n\n\t")
 
             file.write(f"Start -> {self.initial}\n\n")
@@ -121,9 +135,9 @@ class Graph:
             file.write("}")
 
 
-
 def main():
-    x = Graph([0,1],5,initial_state=0,final_states=4,transition_table={0:{0:1,1:2},1:{0:1,1:3},2:{0:1,1:2},3:{0:1,1:4},4:{0:1,1:2}})
+    x = Graph([0, 1], 5, initial_state=0, final_states=4,
+              transition_table={0: {0: 1, 1: 2}, 1: {0: 1, 1: 3}, 2: {0: 1, 1: 2}, 3: {0: 1, 1: 4}, 4: {0: 1, 1: 2}})
 
 
 if __name__ == "__main__":
