@@ -1,3 +1,7 @@
+import graphviz
+
+
+
 class Graph:
     def __init__(self, alphabet: list, states: int or list, isAFND: bool = False, epsilon: bool = False,
                  initial_state: str or int = None, final_states: list = [], transition_table: dict = None) -> None:
@@ -82,22 +86,22 @@ class Graph:
 
         divisor = len(str(self.initial)) + 2
 
-        formato = lambda x: str(x).center(divisor, " ")
+        def text_format(text,filler = " "):
+            return str(text).center(divisor,filler)
 
-        header = "\033[1;4m" + formato("")
+        header = text_format("","_")
 
         for x in self.alphabet:
-            header += "|" + formato(x)
-        header += "\033[0m\n"
+            header += "|" + text_format(x,"_")
 
-        string += header
+        string += header + "\n"
 
         for x in self.table:
             line = ""
             line += (str("*" if x in list(self.final) else ">" if x == self.initial else "") + str(x)).rjust(divisor,
                                                                                                              " ")
             for y in self.table[x].values():
-                line += "|" + formato(y)
+                line += "|" + text_format(y)
             string += line + "\n"
 
         return string
@@ -134,6 +138,15 @@ class Graph:
 
             file.write("}")
 
+        graphviz.render(engine="dot", format="png", filepath=filename.join(("",".gv")))
+
+        with open(filename.join(("",".txt")), "w") as file:
+            file.write(f"Estados: {self.states}\n")
+            file.write(f"Simbolos: {self.alphabet}\n")
+            file.write(f"Inicio: {self.initial}\n")
+            file.write(f"Aceptacion: {self.final}\n")
+            file.write(f"Transiciones:\n")
+            file.write(str(self))
 
 def main():
     x = Graph([0, 1], 5, initial_state=0, final_states=4,
