@@ -2,7 +2,7 @@
 
 
 class State(object):
-    def __init__(self, name = None, transitions = None) -> None:
+    def __init__(self, name:str = None, transitions:dict = None) -> None:
         self.transitions = transitions if transitions else {}
         self.name = name
         pass
