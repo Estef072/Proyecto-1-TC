@@ -27,13 +27,20 @@ def Thompson(expression:str):
             afn1.final.AddTransition(end, "#")    #S3 -> S5 (final)
             afn2.final.AddTransition(end, "#")    #S4 -> S5 (final)
             afn = Automata(inicio, end)
+            stack.append(afn)
             pass
         
         #CONCATENACIÓN
         #Forma:
-        #con char1 
+        #con char1: S0 (inicio) -> S1
+        #con char2: S1 -> S2 (final)
         elif i == "?":
-            pass
+            afn1 = stack.pop()
+            afn2 = stack.pop()
+            afn2.end.transitions = afn1.start.transitions
+            afn = Automata(afn2.start, afn1.end)
+            stack.append(afn)
+            
         elif i == "*":
             pass
         else:
@@ -49,8 +56,5 @@ def Thompson(expression:str):
     print(stack)
         
 Thompson("000")
-        
-    
-    
     
     
