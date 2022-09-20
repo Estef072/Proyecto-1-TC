@@ -12,13 +12,17 @@ class Automata():
         
     def show(self):
         stack = [self.start]
+        visited = []
         while len(stack) != 0:
             afn = stack.pop()
+           
             transiciones = afn.transitions.items()
 
             for key, value in transiciones:
-                stack.append(key)
-                print("con:", value, afn.name, "->", key.name)
+                if afn not in visited:
+                    stack.append(key)
+                    print("con:", value, afn.name, "->", key.name)
+            visited.append(afn)
                 
             
     

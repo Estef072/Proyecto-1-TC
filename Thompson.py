@@ -56,8 +56,8 @@ def Thompson(expression:str):
             end = State(name = f's{contador}')
             afn1 = stack.pop()
             inicio.AddTransition(afn1.start, "#")
-            afn1.final.addTransition(afn1.start, "#")
-            afn1.final.addTransition(end, "#")
+            afn1.final.AddTransition(afn1.start, "#")
+            afn1.final.AddTransition(end, "#")
             inicio.AddTransition(end, "#")
             afn = Automata(inicio, end)
             stack.append(afn)
@@ -81,6 +81,6 @@ def Thompson(expression:str):
             contador +=1
     return stack.pop()
         
-Thompson("aa?b+").show()
+Thompson("aa?b+*").show()
    
     
