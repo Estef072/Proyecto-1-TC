@@ -41,15 +41,34 @@ def Thompson(expression:str):
             afn = Automata(afn2.start, afn1.end)
             stack.append(afn)
             
+        #Estrella de Kleene
+        #Forma:
+        #con epsilon: S0 (inicio) -> S1 (inicio del automata de stack)
+        #con epsilon: S2 (final del automata de stack) -> S1 (inicio del automata de stack)
+        #con epsilon: S2 (final del automata de stack) -> S3 (final)
+        #con epsilon: S0 (inicio) -> S3 (final)
+        
         elif i == "*":
-            pass
+            inicio = State()
+            end = State()
+            afn1 = stack.pop()
+            inicio.AddTransition(afn1.start, "#")
+            afn1.final.addTransition(afn1.start, "#")
+            afn1.final.addTransition(end, "#")
+            inicio.AddTransition(end, "#")
+            afn = Automata(inicio, end)
+            stack.append(afn)
+            
+        #Inicilización de elementos del alfabeto
+        #forma:
+        #con char: start -> fin
+        
         else:
             inicio = State()
             end = State()
             inicio.AddTransition(end, i)
             
-            #forma:
-            #con char: start -> fin
+
             afn = Automata(start = inicio, final = end)
             stack.append(afn)
             
