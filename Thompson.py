@@ -37,8 +37,8 @@ def Thompson(expression:str):
         elif i == "?":
             afn1 = stack.pop()
             afn2 = stack.pop()
-            afn2.end.transitions = afn1.start.transitions
-            afn = Automata(afn2.start, afn1.end)
+            afn2.final.transitions = afn1.start.transitions
+            afn = Automata(afn2.start, afn1.final)
             stack.append(afn)
             
         #Estrella de Kleene
@@ -72,8 +72,8 @@ def Thompson(expression:str):
             afn = Automata(start = inicio, final = end)
             stack.append(afn)
             
-    print(stack)
+    return stack.pop()
         
-Thompson("000")
+Thompson("aa?b+")
     
     
