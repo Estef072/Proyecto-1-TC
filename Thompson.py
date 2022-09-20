@@ -6,11 +6,12 @@ from Automata import Automata
 def Thompson(expression:str):
     stack = []
     # "#" representa epsilon
+    contador = 0
     for i in expression:
         
         #UNION
         #Forma:
-        #con epsilon: S0 (inicio) -> s1 done
+        #con epsilon: S0 (inicio) -> s1 
         #con epsilon: S0 (inicio) -> s2
         #con char1: S1 -> S3
         #con char2: S2 -> S4
@@ -18,8 +19,9 @@ def Thompson(expression:str):
         #con espsilon: S4 -> S5 (final)
 
         if i == "+":
-            inicio = State()
-            end = State()
+            inicio = State(name = f's{contador}')
+            contador+=1
+            end = State(name = f's{contador}')
             afn1 = stack.pop()
             afn2 = stack.pop()
             inicio.AddTransition(afn1.start, "#") #S0 (inicio) -> S1
@@ -28,7 +30,7 @@ def Thompson(expression:str):
             afn2.final.AddTransition(end, "#")    #S4 -> S5 (final)
             afn = Automata(inicio, end)
             stack.append(afn)
-            pass
+            
         
         #CONCATENACIÓN
         #Forma:
@@ -49,8 +51,9 @@ def Thompson(expression:str):
         #con epsilon: S0 (inicio) -> S3 (final)
         
         elif i == "*":
-            inicio = State()
-            end = State()
+            inicio = State(name = f's{contador}')
+            contador+=1
+            end = State(name = f's{contador}')
             afn1 = stack.pop()
             inicio.AddTransition(afn1.start, "#")
             afn1.final.addTransition(afn1.start, "#")
@@ -64,16 +67,20 @@ def Thompson(expression:str):
         #con char: start -> fin
         
         else:
-            inicio = State()
-            end = State()
+            print(contador)
+            print(i)
+            inicio = State(name = f's{contador}')
+            contador+=1
+            end = State(name = f's{contador}')
             inicio.AddTransition(end, i)
             
 
             afn = Automata(start = inicio, final = end)
             stack.append(afn)
-            
+        if i!="?":
+            contador +=1
     return stack.pop()
         
-Thompson("aa?b+")
-    
+Thompson("aa?b+").show()
+   
     
