@@ -1,4 +1,4 @@
-from ast import Pass
+from ast import Pass, operator
 from State import State
 from Automata import Automata
 
@@ -80,7 +80,56 @@ def Thompson(expression:str):
         if i!="?":
             contador +=1
     return stack.pop()
-        
-Thompson("aa?b+*").show()
+
+def InfixPostfix(regex:str):
+    #precedence = {"+": 0, "-": 0, "*": 1, "/":1, "^":2, }
+    precedence = {"+": 0, "?": 1, "*": 2}
+    newRegex = ""
+    for i in range(len(regex)):
+        if i == len(regex)-1:
+            newRegex += regex[i]
+        else:
+            if regex[i+1] not in precedence.keys() and regex[i+1] !="(" and regex[i+1]!= ")" and regex[i] not in precedence.keys():
+                newRegex += regex[i]
+                newRegex += "?"
+            else:
+                newRegex +=regex[i]
+                
+    postfixString = ""
+    operatorStack = []
+    regex = newRegex
+    for i in regex:
+        print(i)
+        if i in precedence.keys() or i=="(" or i == ")":
+            if len(operatorStack)==0 or operatorStack[-1]=="(" or i == "(":
+                operatorStack.append(i)
+            elif i == ")":
+                check = ""
+                while check!="(":
+
+                    postfixString += operatorStack.pop()
+                    check = operatorStack[-1]
+                    print(operatorStack)
+                operatorStack.pop()
+            elif precedence[i] < precedence[operatorStack[-1]]:
+                postfixString += operatorStack.pop()
+                operatorStack.append(i)
+            elif precedence[i] > precedence[operatorStack[-1]]:
+                operatorStack.append(i)
+            elif precedence[i] == precedence[operatorStack[-1]]:
+                postfixString += operatorStack.pop()
+                operatorStack.append(i)
+                
+        else:
+            postfixString += i
+        print("stack: ", operatorStack, "string: ", postfixString)
+    while len(operatorStack)!=0:
+        postfixString += operatorStack.pop()
+    print(postfixString)
+
+InfixPostfix("aa+b")
+    
+
+#Thompson("aa?b+*").show()
    
     
