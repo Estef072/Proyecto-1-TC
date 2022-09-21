@@ -18,11 +18,3 @@ class State(object):
         for key,value in self.transitions.items():
             print(value, self.name, "-->", key.name)
         
-hola = State(name = "q0")
-hola2 = State(name = "q1")
-hola3 = State(name = "q2")
-
-hola.AddTransition(hola2, 2)
-hola.AddTransition(hola2, 3)
-hola.AddTransition(hola3, 3)
-

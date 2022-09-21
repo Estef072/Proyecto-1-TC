@@ -15,7 +15,6 @@ class Automata():
         visited = []
         while len(stack) != 0:
             afn = stack.pop()
-           
             transiciones = afn.transitions.items()
 
             for key, value in transiciones:
@@ -23,7 +22,28 @@ class Automata():
                     stack.append(key)
                     print("con:", value, afn.name, "->", key.name)
             visited.append(afn)
+    
+    def Transiciones(self):
+        stack = [self.start]
+        visited = []
+        trans = {}
+        while len(stack) != 0:
+            afn = stack.pop()
+            transiciones = afn.transitions.items()
+
+            for key, value in transiciones:
+                if afn not in visited:
+                    stack.append(key)
+                    if afn.name in trans.keys():
+                        trans[afn.name] = {value: [key.name, anterior]}
+                        
+                    else:
+                        trans[afn.name] = {value: key.name}
+                anterior = key.name
+                    
+            visited.append(afn)
                 
+        return trans
             
     
     

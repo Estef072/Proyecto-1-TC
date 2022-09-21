@@ -1,4 +1,5 @@
 from ast import Pass, operator
+from turtle import pos
 from State import State
 from Automata import Automata
 
@@ -67,8 +68,8 @@ def Thompson(expression:str):
         #con char: start -> fin
         
         else:
-            print(contador)
-            print(i)
+            #print(contador)
+            #print(i)
             inicio = State(name = f's{contador}')
             contador+=1
             end = State(name = f's{contador}')
@@ -99,7 +100,7 @@ def InfixPostfix(regex:str):
     operatorStack = []
     regex = newRegex
     for i in regex:
-        print(i)
+        #print(i)
         if i in precedence.keys() or i=="(" or i == ")":
             if len(operatorStack)==0 or operatorStack[-1]=="(" or i == "(":
                 operatorStack.append(i)
@@ -109,7 +110,7 @@ def InfixPostfix(regex:str):
 
                     postfixString += operatorStack.pop()
                     check = operatorStack[-1]
-                    print(operatorStack)
+                    #print(operatorStack)
                 operatorStack.pop()
             elif precedence[i] < precedence[operatorStack[-1]]:
                 postfixString += operatorStack.pop()
@@ -122,14 +123,15 @@ def InfixPostfix(regex:str):
                 
         else:
             postfixString += i
-        print("stack: ", operatorStack, "string: ", postfixString)
+        #print("stack: ", operatorStack, "string: ", postfixString)
     while len(operatorStack)!=0:
         postfixString += operatorStack.pop()
     print(postfixString)
+    return (postfixString)
 
-InfixPostfix("aa+b")
     
-
-#Thompson("aa?b+*").show()
+print(Thompson(InfixPostfix("aa+b*")).Transiciones())
+print(" ")
+Thompson(InfixPostfix("aa+b*")).show()
    
     
