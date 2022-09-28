@@ -80,23 +80,36 @@ def Thompson(expression:str):
             contador +=1
     return stack.pop()
 
+#Convertir la expresión de infix (normal) a postfix
+#params:
+#@regex -> str Expresión regular a convertir
 def InfixPostfix(regex:str):
     #precedence = {"+": 0, "-": 0, "*": 1, "/":1, "^":2, }
     precedence = {"+": 0, "?": 1, "*": 2}
     newRegex = ""
+    
+    #Agrega un signo ? cada vez que hay una concatenación
     for i in range(len(regex)):
         if i == len(regex)-1:
             newRegex += regex[i]
         else:
-            if regex[i+1] not in precedence.keys() and regex[i+1] !="(" and regex[i+1]!= ")" and regex[i] not in precedence.keys():
-                newRegex += regex[i]
-                newRegex += "?"
+            if regex[i+1] not in precedence.keys() and regex[i+1]!= ")":
+                if regex[i] == "*":
+                    newRegex += regex[i]
+                    newRegex += "?"
+                elif regex[i] not in precedence.keys() and regex[i]!="(":
+                    newRegex += regex[i]
+                    newRegex+= "?"
+                else:
+                    newRegex+=regex[i]
             else:
                 newRegex +=regex[i]
                 
+    print(newRegex)
     postfixString = ""
     operatorStack = []
     regex = newRegex
+    #convertir infix postfix
     for i in regex:
         #print(i)
         if i in precedence.keys() or i=="(" or i == ")":
@@ -127,9 +140,14 @@ def InfixPostfix(regex:str):
     print(f"{regex} -> {postfixString}")
     return (postfixString)
 
-    
-print(Thompson(InfixPostfix("aa+b*")).Transiciones())
+s = "01+1"
+print(s)
+InfixPostfix(s)
+
+#returns automata class
+aut = Thompson(InfixPostfix(s))
+print(aut.Transiciones())
 print(" ")
-Thompson(InfixPostfix("aa+b*")).show()
+Thompson(InfixPostfix(s)).show()
    
     
