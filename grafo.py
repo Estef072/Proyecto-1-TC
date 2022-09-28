@@ -1,23 +1,22 @@
 import graphviz
 
-
-
 class Graph:
     def __init__(self, alphabet: list, states: int or list, isAFND: bool = False, epsilon: bool = False,
                  initial_state: str or int = None, final_states: list = [], transition_table: dict = None) -> None:
         """
         Initiates the graph for the automata.\n
-        :param alphabet:
-        :param states:
-        :param isAFND:
-        :param epsilon:
-        :param initial_state:
+        :param alphabet: The name of the transitions. Ej. [0,1]
+        :param states: Given an int it generates the states from 0 to the given number. Otherwise, it can accept a list [Q1,Q2,Q3]
+        :param isAFND: True if the automata is non deterministic.
+        :param epsilon: True if the automata has empty (epsilon) transitions.
+        :param initial_state: The initial state of the automata, can only be string or int.
         :param final_states: A list with the final states, can be string, int or list.
         :param transition_table: Dictionary containing the transitions of the table: {"state":{"tranition":"end_state",...},...}
         """
 
         self.alphabet = alphabet
         self.initial = initial_state
+        self.hasEpsilon = epsilon
 
         if isinstance(final_states, int or str):
             self.final = [final_states]
@@ -81,27 +80,29 @@ class Graph:
         Gives the correct format for displaying the graph with a relation table.
         :return: Formatted string
         """
-
         string = ""
+        header_list = self.alphabet + (["e"] if self.hasEpsilon else [])
 
         divisor = len(str(self.initial)) + 2
 
-        def text_format(text,filler = " "):
-            return str(text).center(divisor,filler)
+        def text_format(text, filler = " "):
+            return str(text).center(divisor, filler)
 
-        header = text_format("","_")
+        header = text_format("", "_")
 
-        for x in self.alphabet:
+        for x in header_list:
             header += "|" + text_format(x,"_")
 
         string += header + "\n"
 
-        for x in self.table:
+        for x in self.states:
             line = ""
-            line += (str("*" if x in list(self.final) else ">" if x == self.initial else "") + str(x)).rjust(divisor,
-                                                                                                             " ")
-            for y in self.table[x].values():
-                line += "|" + text_format(y)
+            line += (str ("*" if x in list(self.final) else ">" if x == self.initial else "") + str(x)).rjust(divisor, " ")
+
+            valores = self.table[x] if x in self.table else []
+
+            for y in header_list:
+                line += "|" + text_format(valores[y] if y in valores else " ")
             string += line + "\n"
 
         return string
@@ -123,6 +124,12 @@ class Graph:
         self.table[initial_state][transition] = final_state
 
     def export(self, filename="output"):
+        """
+        Creates a text file with the data of the automata and a graph of the automata
+        :param filename: the name of the files without extension
+        :return: Three files with the given name: <output>.gv,<output>.gv.png,<output>.txt
+        """
+
         with open(filename.join(("", ".gv")), "w") as file:
             file.write("digraph finite_state_machine {\n    rankdir=LR;\n\n\t")
 
@@ -134,7 +141,8 @@ class Graph:
 
             for state, t_tbl in self.table.items():
                 for trans, dest in t_tbl.items():
-                    file.write(f'\t{state} -> {dest} [ label = "{trans}" ]\n')
+                    for single in dest if isinstance(dest, list) else [dest]:
+                        file.write(f'\t{state} -> {single} [ label = "{trans}" ]\n')
 
             file.write("}")
 
@@ -149,9 +157,11 @@ class Graph:
             file.write(str(self))
 
 def main():
-    x = Graph([0, 1], 5, initial_state=0, final_states=4,
-              transition_table={0: {0: 1, 1: 2}, 1: {0: 1, 1: 3}, 2: {0: 1, 1: 2}, 3: {0: 1, 1: 4}, 4: {0: 1, 1: 2}})
+    AFD = Graph([0, 1], 5, initial_state=0, final_states=4, transition_table={0: {0: 1, 1: 2}, 1: {0: 1, 1: 3}, 2: {0: 1, 1: 2}, 3: {0: 1, 1: 4}, 4: {0: 1, 1: 2}})
 
+    AFNDE = Graph(["a", "b"], 3, True, True, 0, 1, transition_table={0: {"a": 1}, 1: {"b": 2}, 2: {"e": 0}})
+
+    AFN = Graph([0,1], 3, True, False, 0, 2, transition_table={0: {0: 1, 1:[0,1]}, 1: {1: 2}})
 
 if __name__ == "__main__":
     main()
