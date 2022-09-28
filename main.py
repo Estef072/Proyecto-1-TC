@@ -59,6 +59,13 @@ def main():
         mapa_claus.update({x:clausura(x)})
 
 
+    tt = {}
+
+    beta = mapa_claus[AFNDE.initial]
+
+
+
+
 if __name__ == '__main__':
     main()
 
