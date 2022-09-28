@@ -18,8 +18,16 @@ def main():
 
     print(AFD)
 
-    print(Thompson(InfixPostfix("aa+b*")).Transiciones())
+    tta = Thompson(InfixPostfix("((ab)*)b"))
+    tt = tta.Transiciones()
+    ti = tta.start.name
+    tf = tta.final.name
+    regex = "aa+b*".replace("*","").replace("+","").replace("(","").replace(")","")
+    talpha = list(set(list(regex)))
+    tstates = list(tt.keys()) + list([tf] if tf not in tt else "")
 
+    TEST = Graph(talpha,tstates,True,True,ti,[tf],tt)
+    TEST.export("a")
 
 
 if __name__ == '__main__':

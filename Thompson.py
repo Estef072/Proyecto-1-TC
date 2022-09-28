@@ -124,7 +124,7 @@ def InfixPostfix(regex:str):
         #print("stack: ", operatorStack, "string: ", postfixString)
     while len(operatorStack)!=0:
         postfixString += operatorStack.pop()
-    print(postfixString)
+    print(f"{regex} -> {postfixString}")
     return (postfixString)
 
     
