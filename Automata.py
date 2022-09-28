@@ -10,6 +10,7 @@ class Automata():
         self.start = start
         self.final = final
         
+    #prints transitions
     def show(self):
         stack = [self.start]
         visited = []
@@ -20,9 +21,10 @@ class Automata():
             for key, value in transiciones:
                 if afn not in visited:
                     stack.append(key)
-                    print("con:", value, afn.name, "->", key.name)
+                    print(afn.name, "-->",value,"-->", key.name)
             visited.append(afn)
     
+    #pone todas las transiciones en un diccionario
     def Transiciones(self):
         stack = [self.start]
         visited = []
