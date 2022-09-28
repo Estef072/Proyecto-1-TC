@@ -142,10 +142,13 @@ def InfixPostfix(regex:str):
     print(postfixString)
     return (postfixString)
 
-s = "(a+b)*(abba*+(ab)*ba)"
+s = "01+1"
 print(s)
 InfixPostfix(s)
-print(Thompson(InfixPostfix(s)).Transiciones())
+
+#returns automata class
+aut = Thompson(InfixPostfix(s))
+print(aut.Transiciones())
 print(" ")
 Thompson(InfixPostfix(s)).show()
    
