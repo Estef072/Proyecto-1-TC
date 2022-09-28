@@ -1,5 +1,3 @@
-from ast import Pass, operator
-from turtle import pos
 from State import State
 from Automata import Automata
 

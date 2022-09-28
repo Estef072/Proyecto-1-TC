@@ -1,5 +1,6 @@
 from grafo import Graph
 from minimization import minimizar
+from Thompson import Thompson, InfixPostfix
 from itertools import cycle
 import time
 
@@ -16,6 +17,8 @@ def main():
     AFD = minimizar(AFD)
 
     print(AFD)
+
+    print(Thompson(InfixPostfix("aa+b*")).Transiciones())
 
 
 

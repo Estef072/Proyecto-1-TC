@@ -82,7 +82,7 @@ class Graph:
         :return: Formatted string
         """
         string = ""
-        header_list = self.alphabet + (["e"] if self.hasEpsilon else [])
+        header_list = self.alphabet + (["#"] if self.hasEpsilon else [])
 
         divisor = len(str(self.initial)) + 2
 
@@ -214,7 +214,7 @@ class Graph:
 def main():
     AFD = Graph([0, 1], 5, initial_state=0, final_states=4, transition_table={0: {0: 1, 1: 2}, 1: {0: 1, 1: 3}, 2: {0: 1, 1: 2}, 3: {0: 1, 1: 4}, 4: {0: 1, 1: 2}})
 
-    AFNDE = Graph(["a", "b"], 3, True, True, 0, 1, transition_table={0: {"a": 1}, 1: {"b": 2}, 2: {"e": 0}})
+    AFNDE = Graph(["a", "b"], 3, True, True, 0, 1, transition_table={0: {"a": 1}, 1: {"b": 2}, 2: {"#": 0}})
     AFN = Graph([0,1], 3, True, False, 0, 2, transition_table={0: {0: 1, 1:[0,1]}, 1: {1: 2}})
 
 if __name__ == "__main__":
