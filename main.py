@@ -29,6 +29,8 @@ def main():
     TEST = Graph(talpha,tstates,True,True,ti,[tf],tt)
     TEST.export("a")
 
+    
+
 
 if __name__ == '__main__':
     main()
