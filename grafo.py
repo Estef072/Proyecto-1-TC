@@ -1,4 +1,5 @@
 import graphviz
+import time
 
 class Graph:
     def __init__(self, alphabet: list, states: int or list, isAFND: bool = False, epsilon: bool = False,
@@ -134,7 +135,8 @@ class Graph:
             file.write("digraph finite_state_machine {\n    rankdir=LR;\n\n\t")
 
             file.write("node [shape = point]; Start;\n\t")
-            file.write("node [shape = doublecircle]; " + str(self.final).replace("[", "").replace("]", "") + ";\n\t")
+            print(str(self.final).replace("[", "").replace("]", "").replace("'",""))
+            file.write("node [shape = doublecircle]; " + str(self.final).replace("[", "").replace("]", "").replace("'","") + ";\n\t")
             file.write("node [shape = circle];\n\n\t")
 
             file.write(f"Start -> {self.initial}\n\n")
@@ -142,7 +144,7 @@ class Graph:
             for state, t_tbl in self.table.items():
                 for trans, dest in t_tbl.items():
                     for single in dest if isinstance(dest, list) else [dest]:
-                        file.write(f'\t{state} -> {single} [ label = "{trans}" ]\n')
+                        file.write(f'\t{state} -> "{single}" [ label = "{trans}" ]\n')
 
             file.write("}")
 
@@ -156,11 +158,63 @@ class Graph:
             file.write(f"Transiciones:\n")
             file.write(str(self))
 
+    def simular(self, cadena: str) -> None:
+
+        for y in cadena:
+            if (int(y) if isinstance(self.alphabet[0], int) else y) not in self.alphabet:
+                print(f"Un valor {y} no se encuentra en el alfabeto {self.alphabet}")
+                return None
+
+        current_state = self.initial
+
+        initial_time = time.time()
+
+        string = ""
+
+        def inner_simular(inner_cadena, current_state, string):
+            for y in range(len(inner_cadena)):
+                trans = inner_cadena[y]
+
+                string += (f"{current_state} --[{trans}]-> ")
+
+                try:
+                    current_state = self.table[current_state][int(trans) if isinstance(self.alphabet[0], int) else trans]
+                except:
+                    print(f"{string}Fin del camino.")
+                    return None
+
+                if isinstance(current_state, list or tuple):
+                    temp = []
+                    for state in current_state:
+                        temp += [inner_simular(inner_cadena[y + 1:], state, string)]
+                    if True in temp:
+                        return True
+                    else:
+                        return False
+
+            string += f"{current_state}"
+            print(string, end=" ")
+            if current_state in self.final:
+                print("Aceptado")
+                return True
+            else:
+                print("No Aceptado")
+                return False
+
+        if inner_simular(cadena, current_state, string):
+            print("La cadena es aceptada")
+        else:
+            print("La cadena no es aceptada")
+        final_time = time.time()
+        print(f"Tiempo de simulacion: {final_time - initial_time}")
+
+
+
+
 def main():
     AFD = Graph([0, 1], 5, initial_state=0, final_states=4, transition_table={0: {0: 1, 1: 2}, 1: {0: 1, 1: 3}, 2: {0: 1, 1: 2}, 3: {0: 1, 1: 4}, 4: {0: 1, 1: 2}})
 
     AFNDE = Graph(["a", "b"], 3, True, True, 0, 1, transition_table={0: {"a": 1}, 1: {"b": 2}, 2: {"e": 0}})
-
     AFN = Graph([0,1], 3, True, False, 0, 2, transition_table={0: {0: 1, 1:[0,1]}, 1: {1: 2}})
 
 if __name__ == "__main__":
