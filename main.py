@@ -18,7 +18,7 @@ def main():
 
     print(AFD)
 
-    tta = Thompson(InfixPostfix("((ab)*)b"))
+    tta = Thompson(InfixPostfix("(a+b)*(abba*+(ab)*ba)"))
     tt = tta.Transiciones()
     ti = tta.start.name
     tf = tta.final.name
