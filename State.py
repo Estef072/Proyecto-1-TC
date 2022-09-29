@@ -15,6 +15,5 @@ class State(object):
             self.transitions[state] = edge
             
     def GetTransitions(self):
-        for key,value in self.transitions.items():
-            print(value, self.name, "-->", key.name)
+        return self.transitions
         

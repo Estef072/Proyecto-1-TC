@@ -52,7 +52,8 @@ class Automata():
         return trans
     
     def subconjuntos(self):
-        stack = [self.start]
+        
+        stack = []
         visited = []
         trans = {}
         #

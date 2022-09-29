@@ -121,10 +121,12 @@ def InfixPostfix(regex:str):
 
                     postfixString += operatorStack.pop()
                     check = operatorStack[-1]
-                    #print(operatorStack)
                 operatorStack.pop()
             elif precedence[i] < precedence[operatorStack[-1]]:
-                postfixString += operatorStack.pop()
+                while precedence[i] < precedence[operatorStack[-1]]:
+                    postfixString += operatorStack.pop()
+                    if len(operatorStack) == 0 or operatorStack[-1]=="(":
+                       break
                 operatorStack.append(i)
             elif precedence[i] > precedence[operatorStack[-1]]:
                 operatorStack.append(i)
@@ -134,20 +136,20 @@ def InfixPostfix(regex:str):
                 
         else:
             postfixString += i
+        print(i, operatorStack, postfixString)
         #print("stack: ", operatorStack, "string: ", postfixString)
     while len(operatorStack)!=0:
         postfixString += operatorStack.pop()
     print(f"{regex} -> {postfixString}")
     return (postfixString)
 
-s = "01+1"
+s = "(a+b)*(abba*+(ab)*ba)"
 print(s)
 InfixPostfix(s)
 
-#returns automata class
-aut = Thompson(InfixPostfix(s))
-print(aut.Transiciones())
+''' aut = Thompson(InfixPostfix(s)) '''
+''' print(Thompson(InfixPostfix(s)).Transiciones())
 print(" ")
-Thompson(InfixPostfix(s)).show()
+Thompson(InfixPostfix(s)).show() '''
    
     
