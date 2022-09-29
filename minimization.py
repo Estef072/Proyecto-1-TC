@@ -2,6 +2,8 @@ from grafo import Graph
 
 def minimizar(AFD:Graph) -> Graph:
 
+    AFD.export("Test")
+
     map = {}
     for x in AFD.alphabet:
         map.update({x: []})
@@ -24,7 +26,7 @@ def minimizar(AFD:Graph) -> Graph:
         matrix.remove(x)
 
     for x in combinations(AFD.final, [x for x in AFD.states if x not in AFD.final]):
-        lista.append(x)
+        lista.append(tuple(sorted(x)))
 
     everyindex = lambda list, value: [i for i, x in enumerate(list) if x == value]
 
@@ -33,18 +35,26 @@ def minimizar(AFD:Graph) -> Graph:
     while lista:
         x, y = lista.pop(0)
         for transitions in map.values():
-            if x in transitions or y in transitions:
+            if x in transitions and y in transitions:
                 tx = everyindex(transitions, x)
                 ty = everyindex(transitions, y)
 
                 comb = combinations(tx, ty)
 
+                if isinstance(AFD.initial,str):
+                    a = []
+                    for t in comb:
+                        a.append(tuple([str(x) for x in t]))
+                    comb = a
+
+
                 if (x, y) in comb:
                     comb.remove((x, y))
 
+                comb = [tuple(sorted(x)) for x in comb]
+
                 lista += comb
 
-            print(x,y)
             vert = tuple(sorted((x, y)))
 
             if vert in matrix:

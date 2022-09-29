@@ -50,7 +50,7 @@ def subconjuntos(AFNDE):
                 pila.append(ma[letra])
         tt.update({str(beta):ma})
 
-    alfabeto = ["1","2","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    alfabeto = ["0","1","2","3","4","5","6","7","8","9"]
 
     matriz_final = {}
 
@@ -61,7 +61,7 @@ def subconjuntos(AFNDE):
             mamei.update({z: alfabeto[list(tt.keys()).index(str(w))]})
         matriz_final.update({alfabeto[list(tt.keys()).index(x)]: mamei})
 
-    inicial = "A"
+    inicial = "0"
 
     final_states = []
     real_final_states = []
@@ -80,6 +80,6 @@ def subconjuntos(AFNDE):
     talpha = AFNDE.alphabet
     tstates = list(matriz_final.keys())
 
-    SB = Graph(talpha, tstates, False, False, ti, [tf], tt)
+    SB = Graph(talpha, tstates, False, False, ti, tf, tt)
 
     return SB
