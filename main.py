@@ -58,10 +58,40 @@ def main():
     for x in AFNDE.states:
         mapa_claus.update({x:clausura(x)})
 
+    pila = [mapa_claus[AFNDE.initial]]
 
     tt = {}
 
-    beta = mapa_claus[AFNDE.initial]
+    while pila:
+        print(pila)
+        beta = pila.pop()
+        print(pila, beta)
+        ma = {}
+        for letra in AFNDE.alphabet:
+            ma.update({letra: []})
+            for x in beta:
+                try:
+                    state = AFNDE.table[x][letra]
+                except KeyError:
+                    continue
+                ma[letra] += (mapa_claus[state])
+            ma[letra] = list(set(ma[letra]))
+            if str(ma[letra]) not in tt and ma[letra] != beta:
+                pila.append(ma[letra])
+        tt.update({str(beta):ma})
+
+    alfabeto = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+
+    matriz_final = {}
+
+    for x, y in tt.items():
+        print(alfabeto[list(tt.keys()).index(x)])
+        mamei = {}
+        for z, w in y.items():
+            mamei.update({z: alfabeto[list(tt.keys()).index(str(w))]})
+        matriz_final.update({alfabeto[list(tt.keys()).index(x)]: mamei})
+
+    inicial = "A"
 
 
 
