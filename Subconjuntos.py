@@ -1,24 +1,85 @@
+from grafo import Graph
+
+def subconjuntos(AFNDE):
+
+    def clausura(estado) -> list:
+
+        lista = [estado]
+        marca = []
+
+        while lista:
+            estado = lista.pop()
+            marca.append(estado) # Marcamos el estado
+
+            try:
+                states = AFNDE.table[estado]['#']
+            except KeyError:
+                continue
+
+            if not isinstance(states, list or tuple):
+                states = [states]
+            for x in states:
+                if x not in marca:
+                    lista.append(x)
+            lista = list(set(lista))
+
+        return list(set(marca))
 
 
-AFN = Graph([0, 1], 3, True, False, 0, 2, transition_table={0: {0: [0,1], 1: [0]}, 1: {1: 2}})
+    mapa_claus = {}
+    for x in AFNDE.states:
+        mapa_claus.update({x:clausura(x)})
 
-AFN.simular("100")
+    pila = [mapa_claus[AFNDE.initial]]
 
-AFD = Graph([0, 1], 5, initial_state=0, final_states=[3, 4],
-            transition_table={0: {0: 1, 1: 2}, 1: {0: 2, 1: 3}, 2: {0: 2, 1: 4}, 3: {0: 3, 1: 3}, 4: {0: 4, 1: 4}})
+    tt = {}
 
-print(AFD)
-AFD = minimizar(AFD)
+    while pila:
+        beta = pila.pop()
+        ma = {}
+        for letra in AFNDE.alphabet:
+            ma.update({letra: []})
+            for x in beta:
+                try:
+                    state = AFNDE.table[x][letra]
+                except KeyError:
+                    continue
+                ma[letra] += (mapa_claus[state])
+            ma[letra] = list(set(ma[letra]))
+            if str(ma[letra]) not in tt and ma[letra] != beta:
+                pila.append(ma[letra])
+        tt.update({str(beta):ma})
 
-print(AFD)
+    alfabeto = ["1","2","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 
-tta = Thompson(InfixPostfix("((ab)*)b"))
-tt = tta.Transiciones()
-ti = tta.start.name
-tf = tta.final.name
-regex = "aa+b*".replace("*","").replace("+","").replace("(","").replace(")","")
-talpha = list(set(list(regex)))
-tstates = list(tt.keys()) + list([tf] if tf not in tt else "")
+    matriz_final = {}
 
-TEST = Graph(talpha,tstates,True,True,ti,[tf],tt)
-TEST.export("a")
+    for x, y in tt.items():
+        print(alfabeto[list(tt.keys()).index(x)])
+        mamei = {}
+        for z, w in y.items():
+            mamei.update({z: alfabeto[list(tt.keys()).index(str(w))]})
+        matriz_final.update({alfabeto[list(tt.keys()).index(x)]: mamei})
+
+    inicial = "A"
+
+    final_states = []
+    real_final_states = []
+
+    for st in tt.keys():
+        for ef in AFNDE.final:
+            if str(ef) in st:
+                final_states.append(st)
+
+    for x in final_states:
+        real_final_states.append((alfabeto[list(tt.keys()).index(str(x))]))
+
+    tt = matriz_final
+    ti = inicial
+    tf = real_final_states
+    talpha = AFNDE.alphabet
+    tstates = list(matriz_final.keys())
+
+    SB = Graph(talpha, tstates, False, False, ti, [tf], tt)
+
+    return SB

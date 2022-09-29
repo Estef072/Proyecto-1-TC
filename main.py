@@ -2,6 +2,7 @@ from grafo import Graph
 from minimization import minimizar
 from Thompson import Thompson, InfixPostfix
 from itertools import cycle
+from Subconjuntos import subconjuntos
 import time
 
 
@@ -30,70 +31,10 @@ def main():
                                                                      21: {"#": 22},
                                                                      })
 
-    def clausura(estado) -> list:
-
-        lista = [estado]
-        marca = []
-
-        while lista:
-            estado = lista.pop()
-            marca.append(estado) # Marcamos el estado
-
-            try:
-                states = AFNDE.table[estado]['#']
-            except KeyError:
-                continue
-
-            if not isinstance(states, list or tuple):
-                states = [states]
-            for x in states:
-                if x not in marca:
-                    lista.append(x)
-            lista = list(set(lista))
-
-        return list(set(marca))
-
-
-    mapa_claus = {}
-    for x in AFNDE.states:
-        mapa_claus.update({x:clausura(x)})
-
-    pila = [mapa_claus[AFNDE.initial]]
-
-    tt = {}
-
-    while pila:
-        print(pila)
-        beta = pila.pop()
-        print(pila, beta)
-        ma = {}
-        for letra in AFNDE.alphabet:
-            ma.update({letra: []})
-            for x in beta:
-                try:
-                    state = AFNDE.table[x][letra]
-                except KeyError:
-                    continue
-                ma[letra] += (mapa_claus[state])
-            ma[letra] = list(set(ma[letra]))
-            if str(ma[letra]) not in tt and ma[letra] != beta:
-                pila.append(ma[letra])
-        tt.update({str(beta):ma})
-
-    alfabeto = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-
-    matriz_final = {}
-
-    for x, y in tt.items():
-        print(alfabeto[list(tt.keys()).index(x)])
-        mamei = {}
-        for z, w in y.items():
-            mamei.update({z: alfabeto[list(tt.keys()).index(str(w))]})
-        matriz_final.update({alfabeto[list(tt.keys()).index(x)]: mamei})
-
-    inicial = "A"
-
-
+    SB = subconjuntos(AFNDE)
+    SB.export()
+    RM = minimizar(SB)
+    RM.export("meme")
 
 
 if __name__ == '__main__':

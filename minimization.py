@@ -44,6 +44,7 @@ def minimizar(AFD:Graph) -> Graph:
 
                 lista += comb
 
+            print(x,y)
             vert = tuple(sorted((x, y)))
 
             if vert in matrix:
