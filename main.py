@@ -2,6 +2,7 @@ from grafo import Graph
 from minimization import minimizar
 from Thompson import Thompson, InfixPostfix
 from itertools import cycle
+from Subconjuntos import subconjuntos
 import time
 
 
@@ -27,7 +28,14 @@ def main():
     tstates = list(tt.keys()) + list([tf] if tf not in tt else "")
 
     TEST = Graph(talpha,tstates,True,True,ti,[tf],tt)
-    TEST.export("a")
+    TEST.export("Thompson")
+
+    Sub = subconjuntos(TEST)
+    Sub.export("Sub")
+
+    Min = minimizar(Sub)
+    Min.export("min")
+    
 
 
 if __name__ == '__main__':

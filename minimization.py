@@ -2,8 +2,6 @@ from grafo import Graph
 
 def minimizar(AFD:Graph) -> Graph:
 
-    AFD.export("Test")
-
     map = {}
     for x in AFD.alphabet:
         map.update({x: []})
